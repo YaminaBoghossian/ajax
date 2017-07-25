@@ -1,30 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>my first ajax</title>
+    <title>Mon Premier Ajax</title>
+
 
     <script>
-        //Faire une requete http en js XMLHTTP = langage de balisage libre. On va creer une nouvelle instance de xmlhttprequest//
-
+        //On crée une nouvelle instance d'objet AJAX
         let ajax = new XMLHttpRequest();
-
-        // Dire a JS ce qu'il faut faire une fois la reponse de la requete arrivée.Lui définir le comporetmenet quil aura avec la reponse
-        //avant 
-        l
+        //AJAX étant une service asynchrone, il va falloir
+        //lui dire via des évènements comment se comporter
+        //au moment où il aura terminé sa requête et que 
+        //sa réponse sera disponible
         ajax.onreadystatechange = function() {
-            console.log(ajax.response);
+            /*Le readystatechange sera appelé un certain
+            nombre de fois selon où en est notre requête
+            (codes dispo sur mozilla). Le seul code qui
+            va nous intéresser nous sera celui indiquant que
+            la requête est terminé et la réponse disponible : 4
+            */
+            if (ajax.readyState === 4) {
+                //On ne voudra manipuler la réponse seulement si
+                //la requête s'est couronnée de succès
+                if (ajax.status === 200 || ajax.status === 304) {
+                    //La réponse de la requête se trouve alors dans
+                    //l'objet ajax dans sa propriété response.
+                    console.log(ajax.response);
+                }
+            }
         };
-
-        // OUvrir la requete avec la methode open et lui dire comment il va chercher et quest ce quil va chercher//
-
+        //On ouvre le requête en lui fournissant le type de
+        //requête HTTP, l'url à requêter et si c'est synchrone ou non
         ajax.open('GET', 'fichier.txt', true);
-
-        // Envoyer la requete //
-
+        //On envoie la requête
         ajax.send();
     </script>
 </head>
