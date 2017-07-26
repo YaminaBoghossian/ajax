@@ -6,42 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mon Premier Ajax</title>
+    <script src="script/ajax.js"></script>
 
 
-    <script>
-        //On crée une nouvelle instance d'objet AJAX
-        let ajax = new XMLHttpRequest();
-        //AJAX étant une service asynchrone, il va falloir
-        //lui dire via des évènements comment se comporter
-        //au moment où il aura terminé sa requête et que 
-        //sa réponse sera disponible
-        ajax.onreadystatechange = function() {
-            /*Le readystatechange sera appelé un certain
-            nombre de fois selon où en est notre requête
-            (codes dispo sur mozilla). Le seul code qui
-            va nous intéresser nous sera celui indiquant que
-            la requête est terminé et la réponse disponible : 4
-            */
-            if (ajax.readyState === 4) {
-                //On ne voudra manipuler la réponse seulement si
-                //la requête s'est couronnée de succès
-                if (ajax.status === 200 || ajax.status === 304) {
-                    //La réponse de la requête se trouve alors dans
-                    //l'objet ajax dans sa propriété response.
-                    console.log(ajax.response);
-                }
-            }
-        };
-        //On ouvre le requête en lui fournissant le type de
-        //requête HTTP, l'url à requêter et si c'est synchrone ou non
-        ajax.open('GET', 'fichier.txt', true);
-        //On envoie la requête
-        ajax.send();
-    </script>
+
 </head>
 
 <body>
-
+    <p id="para"></p>
+    <button id="requete">Lance Requête</button>
+    <p id="para2"></p>
+    <button id="requete2">Lance Requête</button>
+    <script>
+        document.querySelector('#requete')
+            .addEventListener('click', function() {
+                doAjax({
+                    url: '../ajax/fichier.txt',
+                    callback: function(reponse) {
+                        alert(reponse);
+                    }
+                });
+            });
+        document.querySelector('#requete2')
+            .addEventListener('click', function() {
+                //On crée une nouvelle instance d'objet AJAX
+                let ajax = new XMLHttpRequest();
+                //AJAX étant une service asynchrone, il va falloir
+                //lui dire via des évènements comment se comporter
+                //au moment où il aura terminé sa requête et que 
+                //sa réponse sera disponible
+                ajax.onreadystatechange = function() {
+                    /*Le readystatechange sera appelé un certain
+                    nombre de fois selon où en est notre requête
+                    (codes dispo sur mozilla). Le seul code qui
+                    va nous intéresser nous sera celui indiquant que
+                    la requête est terminé et la réponse disponible : 4
+                    */
+                    if (ajax.readyState === 4) {
+                        //On ne voudra manipuler la réponse seulement si
+                        //la requête s'est couronnée de succès
+                        if (ajax.status === 200 || ajax.status === 304) {
+                            //La réponse de la requête se trouve alors dans
+                            //l'objet ajax dans sa propriété response.
+                            document.querySelector('#para2').innerHTML =
+                                ajax.response;
+                        }
+                    }
+                };
+                //On ouvre le requête en lui fournissant le type de
+                //requête HTTP, l'url à requêter et si c'est synchrone ou non
+                ajax.open('GET', 'fichier.txt', true);
+                //On envoie la requête
+                ajax.send();
+            });
+    </script>
 </body>
 
 </html>

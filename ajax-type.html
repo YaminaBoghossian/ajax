@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ajax Contenu typé</title>
+    <script src="script/ajax.js"></script>
+</head>
+
+<body>
+
+    <div id="contenu"></div>
+    <script>
+        doAjax({
+            url: 'snippet.html',
+            callback: function(reponse) {
+                let parser = new DOMParser(); // ds le cas d'un appendChild
+                let snippet = parser.parseFromString(reponse, 'text/html'); //ds le cas d'un appendChild
+                console.log(snippet.querySelector('section')); //ds le cas d'un appendChild
+
+
+                //document.querySelector('#contenu').innerHTML = reponse; ou
+                document.querySelector('#contenu').appendChild(snippet.querySelector('section'));
+                /* ou plus simplement uniquement:
+                    doAjax({
+                    url: 'snippet.html',
+                    callback: function(reponse) {
+                        document.querySelector('#contenu').innerHTML = reponse;
+                    }
+                */
+            }
+        });
+
+        doAjax({
+            url: 'data.json',
+            callback: function(reponse) {
+                let objet = JSON.parse(reponse); // pr appeler du Jason on doit mettre JSON.parse = Prend
+                //du string et le transforme en objet js .
+
+                console.log(objet);
+
+            }
+        });
+    </script>
+
+</body>
