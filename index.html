@@ -6,60 +6,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mon Premier Ajax</title>
-    <script src="script/ajax.js"></script>
-
-
-
+    <script src="scripts/ajax.js"></script>
 </head>
 
 <body>
+    <form method='GET' action='yo.php'>
+        <p>
+            <textarea name='formu' rows=20 cols=40> </textarea></p>
+        <button id="buttonajax"> OK </button>
+    </form>
+
+
+
     <p id="para"></p>
-    <button id="requete">Lance Requête</button>
+    <button id="requete">Lance Requête 1</button>
     <p id="para2"></p>
-    <button id="requete2">Lance Requête</button>
+    <button id="requete2">Lance Requête 2</button>
+    </br>
+    <button id="requeteEvil">Lance Roquette Démoniaque</button>
     <script>
         document.querySelector('#requete')
             .addEventListener('click', function() {
                 doAjax({
-                    url: '../ajax/fichier.txt',
+                    url: 'fichier.txt',
                     callback: function(reponse) {
-                        alert(reponse);
+                        document.querySelector('#para')
+                            .innerHTML = reponse;
                     }
                 });
             });
         document.querySelector('#requete2')
             .addEventListener('click', function() {
-                //On crée une nouvelle instance d'objet AJAX
-                let ajax = new XMLHttpRequest();
-                //AJAX étant une service asynchrone, il va falloir
-                //lui dire via des évènements comment se comporter
-                //au moment où il aura terminé sa requête et que 
-                //sa réponse sera disponible
-                ajax.onreadystatechange = function() {
-                    /*Le readystatechange sera appelé un certain
-                    nombre de fois selon où en est notre requête
-                    (codes dispo sur mozilla). Le seul code qui
-                    va nous intéresser nous sera celui indiquant que
-                    la requête est terminé et la réponse disponible : 4
-                    */
-                    if (ajax.readyState === 4) {
-                        //On ne voudra manipuler la réponse seulement si
-                        //la requête s'est couronnée de succès
-                        if (ajax.status === 200 || ajax.status === 304) {
-                            //La réponse de la requête se trouve alors dans
-                            //l'objet ajax dans sa propriété response.
-                            document.querySelector('#para2').innerHTML =
-                                ajax.response;
-                        }
+                doAjax({
+                    url: 'README.md',
+                    callback: function(reponse) {
+                        let div = document.createElement('div');
+                        div.innerHTML = reponse;
+                        document.querySelector('#para2')
+                            .appendChild(div);
                     }
-                };
-                //On ouvre le requête en lui fournissant le type de
-                //requête HTTP, l'url à requêter et si c'est synchrone ou non
-                ajax.open('GET', 'fichier.txt', true);
-                //On envoie la requête
-                ajax.send();
+                });
             });
-    </script>
+        let button = document.querySelector('#requeteEvil');
+        button.addEventListener('click', function() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', 'evil.js');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        eval(xhr.responseText);
+                    } else {
+                        console.error('unexpected status code:', this.status);
+                    }
+                }
+            };
+            xhr.send(null);
+        });
+        //créer un événement `click` sur le bouton
+        //empécher que le formulaire soit envoyé lorsqu'on clique sur le bouton (`preventDefault`)
+        document.querySelector('#buttonajax')
+            .addEventListener('click', function(e) {
+                e.preventDefault(); //cela va bloquer lenvoi et ne pas changer de page ni la recharger //
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', 'yo.php?text=' + document.querySelector("textarea"));
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        eval(xhr.responseText);
+
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+                xhr.send('formu=totopass=tata');
+            });
+    </script>s
 </body>
 
 </html>
